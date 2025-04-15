@@ -29,6 +29,7 @@
           <li><a href="#erd">📋 논리/물리 ERD</a></li>
           <li><a href="#restapi">✔️ REST API 설계 문서</a></li>
           <li><a href="#msa">📌 MSA 아키텍쳐 구조도</a></li>
+          <li><a href="#eca">🙌 Eureka Server & Client & API Gateway 구조</a></li>
           <li><a href="#test">🎖️ 테스트 결과 보고서</a></li>
           <li><a href="#wbs">📝 WBS</a></li>
           <li><a href="#gantt">📊Gantt Chart</a></li>
@@ -132,7 +133,7 @@ com.freepath.devpath
 │   └── service
 │
 │
-├── user # Users 
+├── user # Users
 │   ├── command
 │   ├── config
 │   ├── exception
@@ -143,7 +144,7 @@ com.freepath.devpath
 │   ├── config
 │   ├── exception
 │   └── query
-│ 
+│
 ├── chatting # Chatting, ChattingJoin, ChattingRoom, UserBlock
 │   ├── command
 │   ├── exception
@@ -153,15 +154,15 @@ com.freepath.devpath
 │   ├── post # Board, BoardCategory, Attachment
 │   │   ├── command
 │   │   └── query
-│   │   
+│   │
 │   ├── comment # Comment
 │   │   ├── command
 │   │   └── query
-│   │   
+│   │
 │   ├── vote # Vote, VoteItem, VoteHistory
 │   │   ├── command
 │   │   └── query
-│   │   
+│   │
 │   └── interaction # Like, BoardBookmark
 │       ├── command
 │       └── query
@@ -180,9 +181,9 @@ com.freepath.devpath
 │   └── service
 │
 └── csquiz # CsQuiz, CsQuizResult, CsQuizOption
-    ├── command
-    ├── exception
-    └── query
+├── command
+├── exception
+└── query
 
 ```
 </details>
@@ -246,9 +247,10 @@ com.freepath.devpath
         <summary><b>MSA 아키텍쳐 구조도 상세보기</b></summary>
         <img src="./assets/project-result/msa.png" alt="WBS" style="width: 100%; height: auto;">
     </details>
-    <br><br>
+    <br>
+<h3 id="eca">🙌 Eureka Server & Client & API Gateway 구조</h3>
     <details>
-      <summary><b>Eureka Server & Client & API Gateway 구조</b></summary>
+      <summary><b>Eureka Server & Client & API Gateway 구조 상세보기</b></summary>
     <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/33226033/433664228-59aa9e83-1996-41bf-a7f9-53267b8c2416.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250415%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250415T043842Z&X-Amz-Expires=300&X-Amz-Signature=615990b30f6e26898a70acc46920907672375732c94ef27204d7241eca89f758&X-Amz-SignedHeaders=host" 
          alt="Eureka 구조" style="width: 100%; height: auto;">
     </details>
