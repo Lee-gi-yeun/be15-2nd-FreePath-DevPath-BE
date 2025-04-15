@@ -610,6 +610,7 @@ com.freepath.devpath
     <br>
     <img src="./assets/test/board/interaction/게시글 총 좋아요 개수.png" alt="intr8" style="width: 80%; height: auto;">
     <br>: 사용자는 게시글의 좋아요 총 개수를 조회할 수 있다.
+    <br><br>
     4. 게시글 좋아요 삭제
     <br>
     <img src="./assets/test/board/interaction/게시글 좋아요 삭제.png" alt="intr9" style="width: 80%; height: auto;">
@@ -663,14 +664,17 @@ com.freepath.devpath
     <br>
     <img src="./assets/test/board/interaction/댓글 총 좋아요 개수.png" alt="intr17" style="width: 80%; height: auto;">
     <br>: 사용자는 댓글의 좋아요 총 개수를 조회할 수 있다.
+    <br><br>
     3. 댓글 좋아요 삭제
     <br>
     <img src="./assets/test/board/interaction/댓글 좋아요 삭제.png" alt="intr18" style="width: 80%; height: auto;">
     <br>: 사용자는 댓글의 좋아요를 취소할 수 있다.
+    <br><br>
     4. 댓글 좋아요 실패
     <br>
     <img src="./assets/test/board/interaction/댓글 좋아요 실패.png" alt="intr19" style="width: 80%; height: auto;">
     <br>: 댓글의 좋아요 실패 예외 처리
+    <br><br>
     5. 댓글 좋아요 삭제 실패
     <br>
     <img src="./assets/test/board/interaction/댓글 좋아요 삭제 실패.png" alt="intr20" style="width: 80%; height: auto;">
