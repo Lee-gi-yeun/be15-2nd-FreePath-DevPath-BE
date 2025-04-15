@@ -7,7 +7,6 @@ import com.freepath.devpath.chatting.command.application.service.ChattingRoomCom
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.Extension;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -15,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +40,7 @@ class ChattingRoomCommandControllerTest {
     void createChattingRoom() throws Exception {
         int userId = 2;
         ChattingRoomCommandResponse mockResponse = new ChattingRoomCommandResponse(1);
-        Mockito.when(chattingRoomCommandService.createChattingRoom(eq("user01"), eq(userId)))
+        Mockito.when(chattingRoomCommandService.createChattingRoom(eq("username"), eq(userId)))
                 .thenReturn(mockResponse);
 
         mockMvc.perform(post("/chatting/create/{userId}", userId))
