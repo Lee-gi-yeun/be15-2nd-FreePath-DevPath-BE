@@ -546,6 +546,7 @@ com.freepath.devpath
   <br>
   <img src="https://github.com/user-attachments/assets/f447f1d6-89e4-4fb7-bd72-55f98e1b8642" alt="투표 참여(일반)" style="width: 80%; height: auto;">
   <br>투표가 있는 게시글에 투표 참여
+  <br><br>
   2. 투표 참여(중복)
   <br>
   <img src="https://github.com/user-attachments/assets/7dbff11a-c536-4822-a8eb-2c8f3cbd0fd5" alt="투표 참여(중복)" style="width: 80%; height: auto;">
@@ -557,6 +558,7 @@ com.freepath.devpath
   <br>
   <img src="https://github.com/user-attachments/assets/39d852da-784b-4c99-94a2-3942d5241c09" alt="투표 종료(일반)" style="width: 80%; height: auto;">
   <br>투표를 종료
+  <br><br>
   2. 투표 종료(권한 X)
   <br>
   <img src="https://github.com/user-attachments/assets/63203bca-d59b-4a50-b07f-8c54ccd702cc" alt="투표 종료(권한 X)" style="width: 80%; height: auto;">
