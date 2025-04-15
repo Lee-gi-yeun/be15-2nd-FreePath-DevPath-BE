@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,13 +44,13 @@ public class InterviewQueryController {
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping
     public ResponseEntity<ApiResponse<InterviewRoomListResponse>> getInterviewRoomList(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal String userId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
 
-        Long userId = Long.valueOf(userDetails.getUsername());
-        InterviewRoomListResponse response = interviewQueryService.getInterviewRoomList(userId, page, size);
+        Long id = Long.valueOf(userId);
+        InterviewRoomListResponse response = interviewQueryService.getInterviewRoomList(id, page, size);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -68,16 +67,16 @@ public class InterviewQueryController {
     @GetMapping("/filter")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<ApiResponse<InterviewRoomListResponse>> getFilteredInterviewRoomList(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal String userId,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String difficultyLevel,
             @RequestParam(required = false) String evaluationStrictness,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
+        Long id = Long.valueOf(userId);
         InterviewRoomListResponse response = interviewQueryService.getFilteredInterviewRoomList(
-                userId, category, difficultyLevel, evaluationStrictness, page, size);
+                id, category, difficultyLevel, evaluationStrictness, page, size);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -90,10 +89,10 @@ public class InterviewQueryController {
     @GetMapping("/{interviewRoomId}")
     public ResponseEntity<ApiResponse<InterviewRoomDetailResponse>> getInterviewRoomDetail(
             @PathVariable Long interviewRoomId,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal String userId
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
-        InterviewRoomDetailResponse response = interviewQueryService.getInterviewRoomByRoomId(interviewRoomId, userId);
+        Long id = Long.valueOf(userId);
+        InterviewRoomDetailResponse response = interviewQueryService.getInterviewRoomByRoomId(interviewRoomId, id);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -107,11 +106,11 @@ public class InterviewQueryController {
     @GetMapping("/{interviewRoomId}/summary")
     public ResponseEntity<ApiResponse<InterviewSummaryResponse>> getInterviewSummary(
             @PathVariable Long interviewRoomId,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal String userId
     ) {
 
-        Long userId = Long.valueOf(userDetails.getUsername());
-        InterviewSummaryResponse response = interviewQueryService.getInterviewSummary(interviewRoomId, userId);
+        Long id = Long.valueOf(userId);
+        InterviewSummaryResponse response = interviewQueryService.getInterviewSummary(interviewRoomId, id);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }

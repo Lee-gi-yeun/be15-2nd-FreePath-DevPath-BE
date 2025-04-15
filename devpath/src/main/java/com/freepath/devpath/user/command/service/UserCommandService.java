@@ -144,6 +144,9 @@ public class UserCommandService {
         if (updatedCount == 0) {
             throw new UserException(ErrorCode.USER_NOT_FOUND);
         }
+
+        redisUtil.deleteData("TEMP_C_PASSWORD:" + email);
+        redisUtil.deleteData("VERIFIED_C_PASSWORD:" + email);
     }
 
     public void changeEmail(String currentEmail, String newEmail) {

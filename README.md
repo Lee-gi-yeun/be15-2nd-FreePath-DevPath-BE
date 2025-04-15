@@ -241,9 +241,83 @@ com.freepath.devpath
 </details>
 <br>
 <h3 id="msa">📌 MSA 아키텍쳐 구조도</h3>
+    <details>
+        <summary><b>MSA 아키텍쳐 구조도 상세보기</b></summary>
+        <img src="./assets/project-result/msa.png" alt="WBS" style="width: 100%; height: auto;">
+    </details>
 
 <br>
 <h3 id="test">🎖️ 테스트 결과 보고서</h3>
+<li><span style="font-size: 1.2em">회원 테스트</span></li>
+    <details>
+        <summary><b>회원 가입</b></summary>
+        1. 일반 회원가입
+        <br>
+        <img src="./assets/test/user/일반회원_회원가입.png" alt="user1" style="width: 80%; height: auto;">
+        <br>: 일반 회원가입 시 인증 이메일 발송
+        <br><br>
+        <img src="./assets/test/user/일반회원_회원가입인증번호확인.png" alt="user2" style="width: 80%; height: auto;">
+        <br>: 인증번호 확인
+        <br><br>
+        <img src="./assets/test/user/일반회원_회원가입완료.png" alt="user3" style="width: 80%; height: auto;">
+        <br>: 인증번호 확인
+        <br><br>
+        2. 구글 회원가입
+        <br>
+        <img src="./assets/test/user/소셜회원_회원가입&로그인창.png" alt="user4" style="width: 80%; height: auto;">
+        <br>: 구글 회원가입 or 로그인 화면
+        <br><br>
+        <img src="./assets/test/user/소셜회원_닉네임,구독여부입력페이지.png" alt="user5" style="width: 80%; height: auto;">
+        <br>: 구글 인증 후 닉네임, it 기사 구독 여부 입력
+        <br><br>
+        <img src="./assets/test/user/소셜회원_회원가입완료.png" alt="user6" style="width: 80%; height: auto;">
+        <br>: 구글 회원가입 완료
+    </details>
+    <details>
+        <summary><b>로그인</b></summary>
+        1. 일반 로그인
+        <br>
+        <img src="./assets/test/user/일반회원_로그인.png" alt="user7" style="width: 80%; height: auto;">
+        <br>: 일반 로그인 완료
+        <br><br>
+        2. 구글 로그인
+        <br>
+        <img src="./assets/test/user/소셜회원_회원가입&로그인창.png" alt="user8" style="width: 80%; height: auto;">
+        <br>: 구글 로그인 화면
+        <br><br>
+        <img src="./assets/test/user/소셜회원_로그인시토큰확인가능.png" alt="user9" style="width: 80%; height: auto;">
+        <br>: 구글 로그인 시 토큰 확인 가능
+    </details>
+    <details>
+        <summary><b>로그아웃</b></summary>
+        1. 로그아웃
+        <br>
+        <img src="./assets/test/user/회원_로그아웃.png" alt="user11" style="width: 80%; height: auto;">
+    </details>
+    <details>
+        <summary><b>리프레시 토큰 발급</b></summary>
+        1. 리프레시 토큰 발급
+        <br>
+        <img src="./assets/test/user/회원_리프레시토큰.png" alt="user10" style="width: 80%; height: auto;">
+    </details>
+    <details>
+        <summary><b>회원 탈퇴</b></summary>
+        1. 이메일 발송
+        <br>
+        <img src="./assets/test/user/회원_회원탈퇴이메일.png" alt="user11" style="width: 80%; height: auto;">
+        <br>: 회원 탈퇴 시 본인 확인을 위한 이메일 발송
+        <br><br>
+        2. 인증 번호
+        <img src="./assets/test/user/회원_회원탈퇴인증번호확인.png" alt="user12" style="width: 80%; height: auto;">
+        <br>: 인증 번호 확인
+        <br><br>
+        3. 회원 탈퇴
+        <img src="./assets/test/user/회원_회원탈퇴완료.png" alt="user13" style="width: 80%; height: auto;">
+        <br>: 회원 탈퇴 완료
+        <br><br>
+    </details>
+
+
 
 <br>
 <h3 id="wbs">📝 WBS (Work Breakdown Structure)</h3>
