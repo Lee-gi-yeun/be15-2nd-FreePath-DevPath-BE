@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @Tag(name = "채팅방 관리", description = "채팅방 생성/수정/삭제 기능 API")
 public class ChattingRoomCommandController {

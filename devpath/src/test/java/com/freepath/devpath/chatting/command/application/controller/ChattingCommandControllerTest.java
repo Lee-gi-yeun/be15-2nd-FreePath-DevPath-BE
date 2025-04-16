@@ -5,17 +5,12 @@ import com.freepath.devpath.chatting.command.domain.mongo.aggregate.Chatting;
 import com.freepath.devpath.chatting.query.dto.response.ChattingDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-    import static org.junit.jupiter.api.Assertions.*;
-@ExtendWith(MockitoExtension.class)
 class ChattingCommandControllerTest {
-
-
     @Test
     @DisplayName("채팅 리스트 조회")
     void loadChattingList_ReturnsChattingListResponse() {
