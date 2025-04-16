@@ -45,7 +45,7 @@ public class NewsService {
         List<UserEmail> subscribers = userClient.getSubscribedUsers();
 
         for (UserEmail user : subscribers) {
-            sendEmail(user.getEmail(), news.getTitle(), news.getContent());
+            sendEmail(user.getEmail(), news.getTitle(), news.getContent(),news.getLink());
         }
 
         // 뉴스에 발송 시간 기록
@@ -53,14 +53,16 @@ public class NewsService {
         newsRepository.save(news);
     }
 
-    private void sendEmail(String to, String subject, String content) {
+    private void sendEmail(String to, String subject, String content, String link) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setTo(to);
             helper.setSubject("[DevPath 뉴스] " + subject);
-            helper.setText(content, true);
+
+            String htmlContent = content.replace("\n","<br>") + "<br><br><a href='" + link + "'>👉 기사 전체 보기</a>";
+            helper.setText(htmlContent, true);
 
             mailSender.send(message);
         } catch (MessagingException e) {
