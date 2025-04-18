@@ -14,7 +14,6 @@ import com.freepath.devpath.board.vote.command.entity.Vote;
 import com.freepath.devpath.board.vote.command.entity.VoteItem;
 import com.freepath.devpath.board.vote.command.repository.VoteItemRepository;
 import com.freepath.devpath.board.vote.command.repository.VoteRepository;
-import com.freepath.devpath.board.vote.command.service.VoteCommandService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +24,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -58,7 +53,7 @@ class PostCommandServiceIntegrationTest {
     private final int userId = 1;
     @Test
     @DisplayName("게시글 생성")
-    void createPost() throws Exception {
+    void createPost() {
         // given
         VoteCreateRequest voteRequest = new VoteCreateRequest();
         ReflectionTestUtils.setField(voteRequest, "voteTitle", "점심 뭐 먹을래?");
