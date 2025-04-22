@@ -230,7 +230,7 @@ com.freepath.devpath
 <br>
 <h3 id="ddd">📑 DDD</h3>
 <div markdown="1">
-        <a href="https://www.notion.so/DDD-Miro-1c22fdb1414880e484dade87a24fbc40" target="_blank"><strong>| DDD 보기 |</strong></a>
+        <a href="https://miro.com/app/board/uXjVIPVe0Us=/?share_link_id=633681134992" target="_blank"><strong>| DDD 보기 |</strong></a>
 </div>
 
 <br>
