@@ -63,4 +63,10 @@ public class ChattingRoomQueryService {
         List<ChattingRoomJoinUserDTO> joinUsers = chattingRoomMapper.selectJoinUsers(chattingRoomId);
         return new ChattingRoomJoinUsersResponse(joinUsers);
     }
+
+    public WaitingChattingRoomResponse getWaitingChattingRoom(String username) {
+        int userId = Integer.parseInt(username);
+        List<WaitingChattingRoomDTO> waitingChattingRooms = chattingRoomMapper.selectWaitingRoom(userId);
+        return new WaitingChattingRoomResponse(waitingChattingRooms);
+    }
 }

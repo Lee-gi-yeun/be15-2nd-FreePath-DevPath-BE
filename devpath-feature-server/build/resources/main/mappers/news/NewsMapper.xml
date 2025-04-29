@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.freepath.devpath.email.query.mapper.NewsMapper">
+
+    <!-- 뉴스 목록 조회 -->
+    <select id="selectNews" resultType="com.freepath.devpath.email.query.dto.NewsDto">
+        SELECT
+        it_news_title AS title,
+        it_news_link AS link,
+        it_news_contents AS content,
+        mailing_date AS mailingDate
+        FROM it_news
+        <where>
+            <if test="itNewsId != 0">
+                AND it_news_id = #{itNewsId}
+            </if>
+            <if test="title != null and title != ''">
+                AND it_news_title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="mailingDate != null and mailingDate != ''">
+                AND DATE_FORMAT(mailing_date, '%Y-%m-%d') = #{mailingDate}
+            </if>
+        </where>
+        ORDER BY mailing_date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 총 개수 조회 -->
+    <select id="countProducts" resultType="long">
+        SELECT COUNT(*)
+        FROM it_news
+        <where>
+            <if test="itNewsId != 0">
+                AND it_news_id = #{itNewsId}
+            </if>
+            <if test="title != null and title != ''">
+                AND it_news_title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="mailingDate != null and mailingDate != ''">
+                AND DATE_FORMAT(mailing_date, '%Y-%m-%d') = #{mailingDate}
+            </if>
+        </where>
+    </select>
+
+</mapper>
