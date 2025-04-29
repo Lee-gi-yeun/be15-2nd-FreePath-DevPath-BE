@@ -8,6 +8,7 @@
     <!-- 뉴스 목록 조회 -->
     <select id="selectNews" resultType="com.freepath.devpath.email.query.dto.NewsDto">
         SELECT
+        it_news_id AS itNewsId,
         it_news_title AS title,
         it_news_link AS link,
         it_news_contents AS content,

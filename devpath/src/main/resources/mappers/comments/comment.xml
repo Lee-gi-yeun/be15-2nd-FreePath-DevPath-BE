@@ -47,6 +47,8 @@
 
     <select id="selectMyComments" resultType="com.freepath.devpath.board.comment.query.dto.MyCommentResponseDto">
         SELECT
+        c.comment_id AS commentId,
+        b.board_id AS boardId,
         b.board_title AS boardTitle,
         c.comment_contents AS contents,
         c.comment_created_at AS createdAt,
@@ -67,6 +69,8 @@
 
     <select id="selectReportedComments" resultType="com.freepath.devpath.board.comment.query.dto.MyCommentResponseDto">
         SELECT
+        c.comment_id AS commentId,
+        b.board_id AS boardId,
         b.board_title AS boardTitle,
         c.comment_contents AS contents,
         c.comment_created_at AS createdAt,

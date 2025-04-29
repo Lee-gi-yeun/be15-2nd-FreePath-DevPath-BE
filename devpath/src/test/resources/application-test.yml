@@ -4,21 +4,98 @@ spring:
       on-profile: test
 
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;MODE=MariaDB;DB_CLOSE_DELAY=-1
-    username: sa
-    password:
-
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: none
-
     properties:
       hibernate:
         format_sql: true
         use_sql_comments: true
 
+
+  data:
+    mongodb:
+      uri: mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_URL}
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      timeout: 6000ms  # 연결 타임아웃
+      lettuce:
+        pool:
+          max-active: 10  # 최대 활성 연결 수
+          max-idle: 5  # 최대 유휴 연결 수
+          min-idle: 1  # 최소 유휴 연결 수
+          max-wait: 2000ms  # 최대 대기 시간
+
+    elasticsearch:
+      repositories:
+        enabled: true
+
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URL}
+    username: ${ELASTICSEARCH_USERNAME}
+    password: ${ELASTICSEARCH_PASSWORD}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: profile, email
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
   mapper-locations: mappers/**/*.xml
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION} # 30분
+  refresh-expiration : ${JWT_REFRESH_EXPIRATION} # 7일
+
+chatgpt:
+  api:
+    key: ${CHATGPT_API_KEY}
+    url: https://api.openai.com/v1/chat/completions
+
+server:
+  port: 8080
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: devpath
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.web.servlet: DEBUG
+    com.freepath.devpath.board.comment.query.controller: DEBUG
+    org.mybatis: DEBUG
+
+app:
+  oauth2:
+    redirect-url: ${REDIRECT_URL}
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha

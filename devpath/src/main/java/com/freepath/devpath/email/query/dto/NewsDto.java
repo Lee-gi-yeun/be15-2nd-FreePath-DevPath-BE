@@ -8,6 +8,7 @@ import java.util.Date;
 @Getter
 @Builder
 public class NewsDto {
+    private int itNewsId;
     private String title;
     private String link;
     private String content;

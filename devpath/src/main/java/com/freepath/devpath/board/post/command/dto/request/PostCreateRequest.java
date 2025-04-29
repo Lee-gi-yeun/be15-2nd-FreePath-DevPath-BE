@@ -4,11 +4,15 @@ import com.freepath.devpath.board.vote.command.dto.request.VoteCreateRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostCreateRequest {
     @NotNull(message = "게시글 카테고리는 필수입니다.")
     private Integer boardCategory;     // 게시글 카테고리 ID
