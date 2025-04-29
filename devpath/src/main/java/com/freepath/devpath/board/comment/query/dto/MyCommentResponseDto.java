@@ -10,6 +10,8 @@ import java.util.Date;
 @Builder(toBuilder = true)
 public class MyCommentResponseDto {
 
+    private Integer boardId;
+    private int commentId;
     private String boardTitle;
     private String contents;
     private Date createdAt;
