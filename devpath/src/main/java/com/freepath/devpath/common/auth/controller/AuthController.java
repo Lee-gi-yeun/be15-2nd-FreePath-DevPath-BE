@@ -1,11 +1,8 @@
 package com.freepath.devpath.common.auth.controller;
 
-import com.freepath.devpath.common.auth.dto.LoginRequest;
-import com.freepath.devpath.common.auth.dto.RefreshTokenRequest;
-import com.freepath.devpath.common.auth.dto.TokenResponse;
+import com.freepath.devpath.common.auth.dto.*;
 import com.freepath.devpath.common.auth.service.AuthService;
 import com.freepath.devpath.common.dto.ApiResponse;
-import com.freepath.devpath.common.auth.dto.UserDeleteRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +21,9 @@ public class AuthController {
 
     @Operation(summary = "일반 로그인", description = "loginId와 password를 이용해 로그인하고 토큰을 발급받습니다")
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<TokenResponse>> login(@RequestBody LoginRequest request) {
-        TokenResponse token = authService.login(request);
-        return ResponseEntity.ok(ApiResponse.success(token));
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody LoginRequest request) {
+        LoginResponse response = authService.login(request);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @Operation(summary = "토큰 갱신", description = "리프레시 토큰을 이용해 액세스 토큰을 재발급받습니다")

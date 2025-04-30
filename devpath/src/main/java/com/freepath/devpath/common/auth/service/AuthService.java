@@ -1,5 +1,6 @@
 package com.freepath.devpath.common.auth.service;
 
+import com.freepath.devpath.common.auth.dto.LoginResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.email.config.RedisUtil;
 import com.freepath.devpath.user.exception.UserException;
@@ -28,7 +29,7 @@ public class AuthService {
     private final RedisUtil redisUtil;
 
 
-    public TokenResponse login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
         User user = userCommandRepository.findByLoginIdAndUserDeletedAtIsNull(request.getLoginId())
                 .orElseThrow(() -> new UserException(ErrorCode.INVALID_CREDENTIALS));
 
@@ -36,34 +37,29 @@ public class AuthService {
             throw new UserException(ErrorCode.SOCIAL_LOGIN_USER);
         }
 
-        // 유저 탈퇴 여부 확인
         validateUserStatus(user);
 
-        // 요청에 담긴 password를 encoding한 값이 DB에 저장된 값과 동일한지 확인
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new UserException(ErrorCode.INVALID_CREDENTIALS);
         }
 
-        // 로그인 성공 시 token 발급
         String accessToken = jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getUserRole().name());
         String refreshToken = jwtTokenProvider.createRefreshToken(String.valueOf(user.getUserId()), user.getUserRole().name());
 
-
-        // Redis에 value로 저장할 객체 생성
         RefreshToken redisRefreshToken = RefreshToken.builder()
                 .token(refreshToken)
                 .build();
 
-        // Redis에 key를 loginId, value를 refreshToken 객체, TTL을 7일로 설정
         redisTemplate.opsForValue().set(
                 String.valueOf(user.getUserId()),
                 redisRefreshToken,
                 Duration.ofDays(7)
         );
 
-        return TokenResponse.builder()
+        return LoginResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .role(user.getUserRole().name())
                 .build();
     }
 
