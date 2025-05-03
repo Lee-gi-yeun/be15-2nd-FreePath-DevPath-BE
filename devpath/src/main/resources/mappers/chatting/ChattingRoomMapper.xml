@@ -10,17 +10,18 @@
         cr.user_count
         FROM
         CHATTING_JOIN cj
-        JOIN
-        CHATTING_ROOM cr ON cj.chatting_room_id = cr.chatting_room_id
+        JOIN CHATTING_ROOM cr ON cj.chatting_room_id = cr.chatting_room_id
         WHERE
-        cj.user_id = 6
+        cj.user_id = #{userId}
         AND cj.chatting_join_status = 'Y'
-        AND cr.chatting_room_id NOT IN (
-        SELECT cj2.chatting_room_id
+        AND NOT EXISTS (
+        SELECT 1
         FROM CHATTING_JOIN cj2
-        JOIN CHATTING_ROOM cr2 ON cj2.chatting_room_id = cr2.chatting_room_id
-        JOIN USER_BLOCK ub ON ub.blocker_id = 6 AND ub.blocked_id = cj2.user_id
-        WHERE cj2.chatting_role = 'ONE'
+        JOIN USER_BLOCK ub ON ub.blocker_id = #{userId}
+        WHERE cj2.chatting_room_id = cr.chatting_room_id
+        AND cj2.user_id = ub.blocked_id
+        AND cj2.user_id != #{userId}
+        AND cj2.chatting_role = 'ONE'
         );
     </select>
     <select id = "selectWaitingUsers" resultType="com.freepath.devpath.chatting.query.dto.response.ChattingRoomWaitingDTO">
@@ -44,5 +45,11 @@
         JOIN
                 CHATTING_JOIN cj ON u.user_id = cj.user_id
         WHERE cj.chatting_room_id = #{chattingRoomId};
+    </select>
+    <select id = "selectWaitingRoom" resultType="com.freepath.devpath.chatting.query.dto.response.WaitingChattingRoomDTO">
+        SELECT chatting_room_title FROM chatting_room cr
+        JOIN chatting_join cj ON cr.chatting_room_id = cj.chatting_room_id
+        WHERE cj.chatting_join_status = 'W'
+        AND cj.user_id=#{userId};
     </select>
 </mapper>
