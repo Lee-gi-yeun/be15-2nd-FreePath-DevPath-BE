@@ -9,7 +9,7 @@
                 u.nickname
         FROM users u
         JOIN user_block b ON u.user_id = b.blocked_id
-        WHERE b.blocker_id=6;
+        WHERE b.blocker_id=#{userId};
     </select>
 
 </mapper>

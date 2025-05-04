@@ -1,8 +1,10 @@
 package com.freepath.devpath.chatting.query.controller;
 
+import com.freepath.devpath.chatting.command.domain.jpa.aggregate.ChattingRoom;
 import com.freepath.devpath.chatting.query.dto.response.ChattingRoomJoinUsersResponse;
 import com.freepath.devpath.chatting.query.dto.response.ChattingRoomResponse;
 import com.freepath.devpath.chatting.query.dto.response.GroupChattingWaitingRoomResponse;
+import com.freepath.devpath.chatting.query.dto.response.WaitingChattingRoomResponse;
 import com.freepath.devpath.chatting.query.service.ChattingRoomQueryService;
 import com.freepath.devpath.common.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,6 +50,15 @@ public class ChattingRoomQueryController {
             @PathVariable int chattingRoomId
     ){
         ChattingRoomJoinUsersResponse response =chattingRoomQueryService.getChattingRoomJoinUsers(chattingRoomId,userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @Operation(summary = "참여 대기중인 채팅방 조회", description = "특정 사용자가 참여 요청르 보낸 채팅방 목록을 조회한다.")
+    @GetMapping("/chatting/waitingChattingRoom")
+    public ResponseEntity<ApiResponse<WaitingChattingRoomResponse>> getWaitingChattingRoom(
+            @AuthenticationPrincipal UserDetails userDetails
+    ){
+        WaitingChattingRoomResponse response = chattingRoomQueryService.getWaitingChattingRoom(userDetails.getUsername());
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 }

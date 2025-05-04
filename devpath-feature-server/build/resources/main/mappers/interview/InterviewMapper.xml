@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.freepath.devpath.interview.query.mapper.InterviewMapper">
+
+    <!-- =========== ResultMap =========== -->
+    <!-- 목록 조회용 InterviewRoomDto -->
+    <resultMap id="InterviewRoomDtoResultMap" type="com.freepath.devpath.interview.query.dto.InterviewRoomDto">
+        <result property="interviewRoomId" column="interview_room_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="interviewRoomTitle" column="interview_room_title"/>
+        <result property="interviewCategory" column="interview_category"/>
+        <result property="difficultyLevel" column="difficulty_level" />
+        <result property="evaluationStrictness" column="evaluation_strictness" />
+        <result property="interviewRoomStatus" column="interview_room_status"/>
+        <result property="interviewRoomCreatedAt" column="interview_room_created_at"/>
+    </resultMap>
+
+    <!-- 상세 조회용 -->
+    <resultMap id="InterviewRoomDetailResultMap" type="com.freepath.devpath.interview.query.dto.InterviewRoomDetailResponse" extends="InterviewRoomDtoResultMap">
+        <result property="interviewRoomMemo" column="interview_room_memo"/>
+    </resultMap>
+
+    <!-- 재실행된 면접방 조회용 -->
+    <resultMap id="ReexecutedRoomDtoResultMap" type="com.freepath.devpath.interview.query.dto.ReexecutedRoomDto">
+        <result property="interviewRoomId" column="interview_room_id" />
+        <result property="interviewRoomTitle" column="interview_room_title" />
+        <result property="interviewRoomCreatedAt" column="interview_room_created_at" />
+    </resultMap>
+
+    <!-- 면접 내역 -->
+    <resultMap id="InterviewDetailResultMap" type="com.freepath.devpath.interview.query.dto.InterviewDetailDto">
+        <result property="interviewRole" column="interview_role"/>
+        <result property="interviewMessage" column="interview_message"/>
+        <result property="messageCreatedAt" column="message_created_at"/>
+    </resultMap>
+
+
+
+    <!-- =========== SELECT =========== -->
+    <!-- InterviewQueryService -->
+    <!-- 면접방 목록 조회 : 사용자별 -->
+    <select id="selectInterviewRoomListByUserIdExcludingExpired" resultMap="InterviewRoomDtoResultMap">
+        SELECT
+            interview_room_id,
+            user_id,
+            interview_room_title,
+            interview_category,
+            difficulty_level,
+            evaluation_strictness,
+            interview_room_status,
+            interview_room_created_at
+        FROM INTERVIEW_ROOM
+        WHERE user_id = #{userId}
+            AND interview_room_status != 'EXPIRED'
+        ORDER BY interview_room_id DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- 면접방 개수 조회 : 사용자별 -->
+    <select id="countInterviewRoomListByUserIdExcludingExpired" resultType="int">
+        SELECT COUNT(*)
+        FROM INTERVIEW_ROOM
+        WHERE user_id = #{userId}
+            AND interview_room_status != 'EXPIRED'
+    </select>
+
+    <!-- 면접방 목록 조회 : 필터 적용(카테고리/난이도/엄격도) -->
+    <select id="selectInterviewRoomListByFilter" resultMap="InterviewRoomDtoResultMap">
+        SELECT
+            interview_room_id,
+            user_id,
+            interview_room_title,
+            interview_category,
+            difficulty_level,
+            evaluation_strictness,
+            interview_room_status,
+            interview_room_created_at
+        FROM INTERVIEW_ROOM
+        WHERE user_id = #{userId}
+            AND interview_room_status != 'EXPIRED'
+            <if test="category != null and category != ''">
+                AND interview_category = #{category}
+            </if>
+            <if test="difficultyLevel != null and difficultyLevel != ''">
+                AND difficulty_level = #{difficultyLevel}
+            </if>
+            <if test="evaluationStrictness != null and evaluationStrictness != ''">
+                AND evaluation_strictness = #{evaluationStrictness}
+            </if>
+        ORDER BY interview_room_id DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- 면접방 개수 조회 : 필터 적용(카테고리/난이도/엄격도) -->
+    <select id="countInterviewRoomListByFilter" resultType="int">
+        SELECT COUNT(*)
+        FROM INTERVIEW_ROOM
+        WHERE user_id = #{userId}
+            AND interview_room_status != 'EXPIRED'
+            <if test="category != null and category != ''">
+                AND interview_category = #{category}
+            </if>
+            <if test="difficultyLevel != null and difficultyLevel != ''">
+                AND difficulty_level = #{difficultyLevel}
+            </if>
+            <if test="evaluationStrictness != null and evaluationStrictness != ''">
+                AND evaluation_strictness = #{evaluationStrictness}
+            </if>
+    </select>
+
+    <!-- 면접방 상세 조회 -->
+    <select id="selectInterviewRoomByRoomId" resultMap="InterviewRoomDetailResultMap">
+        SELECT
+            interview_room_id,
+            user_id,
+            interview_room_title,
+            interview_category,
+            difficulty_level,
+            evaluation_strictness,
+            interview_room_status,
+            interview_room_memo,
+            interview_room_created_at
+        FROM INTERVIEW_ROOM
+        WHERE interview_room_id = #{interviewRoomId}
+    </select>
+
+    <select id="selectReexecutedRoomsByParentId" resultMap="ReexecutedRoomDtoResultMap">
+        SELECT
+        interview_room_id,
+        interview_room_title,
+        interview_room_created_at
+        FROM
+        INTERVIEW_ROOM
+        WHERE
+        parent_interview_room_id = #{parentInterviewRoomId}
+        ORDER BY
+        interview_room_created_at ASC
+    </select>
+
+    <!-- 면접 내역 조회 -->
+    <select id="selectInterviewListByRoomId" resultMap="InterviewDetailResultMap">
+        SELECT
+            interview_role,
+            interview_message,
+            message_created_at
+        FROM INTERVIEW
+        WHERE interview_room_id = #{interviewRoomId}
+        ORDER BY interview_id ASC
+    </select>
+
+    <!-- 총평 조회 -->
+    <select id="selectInterviewSummaryByRoomId" resultType="string">
+        SELECT interview_message
+        FROM interview
+        WHERE interview_room_id = #{roomId}
+        AND interview_role = 'AI'
+        AND interview_message LIKE '[총평]%'
+        ORDER BY interview_id DESC
+        LIMIT 1
+    </select>
+
+
+    <!-- InterviewQueryAdminService -->
+    <!-- 관리자용 면접방 목록 조회 : 전체 -->
+    <select id="selectAllInterviewRooms" resultMap="InterviewRoomDtoResultMap">
+        SELECT
+            interview_room_id,
+            user_id,
+            interview_room_title,
+            interview_category,
+            difficulty_level,
+            evaluation_strictness,
+            interview_room_status,
+            interview_room_created_at
+        FROM INTERVIEW_ROOM
+        ORDER BY interview_room_id DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- 면접방 개수 조회 : 전체 -->
+    <select id="countAllInterviewRooms" resultType="int">
+        SELECT COUNT(*)
+        FROM INTERVIEW_ROOM
+    </select>
+
+    <!-- 관리자 용 면접방 목록 조회 : 필터 적용 -->
+    <select id="selectAdminInterviewRoomListByFilter" resultMap="InterviewRoomDtoResultMap">
+    SELECT
+        interview_room_id,
+        user_id,
+        interview_room_title,
+        interview_category,
+        difficulty_level,
+        evaluation_strictness,
+        interview_room_status,
+        interview_room_created_at
+    FROM INTERVIEW_ROOM
+    WHERE 1=1
+    <if test="status != null and status != ''">
+        AND interview_room_status = #{status}
+    </if>
+    <if test="category != null and category != ''">
+        AND interview_category = #{category}
+    </if>
+    <if test="difficultyLevel != null and difficultyLevel != ''">
+        AND difficulty_level = #{difficultyLevel}
+    </if>
+    <if test="evaluationStrictness != null and evaluationStrictness != ''">
+        AND evaluation_strictness = #{evaluationStrictness}
+    </if>
+    ORDER BY interview_room_id DESC
+    LIMIT #{size} OFFSET #{offset}
+</select>
+
+    <!-- 관리자 용 면접방 개수 조회 : 필터 적용 -->
+    <select id="countAdminInterviewRoomListByFilter" resultType="int">
+        SELECT COUNT(*)
+        FROM INTERVIEW_ROOM
+        WHERE 1=1
+        <if test="status != null and status != ''">
+            AND interview_room_status = #{status}
+        </if>
+        <if test="category != null and category != ''">
+            AND interview_category = #{category}
+        </if>
+        <if test="difficultyLevel != null and difficultyLevel != ''">
+            AND difficulty_level = #{difficultyLevel}
+        </if>
+        <if test="evaluationStrictness != null and evaluationStrictness != ''">
+            AND evaluation_strictness = #{evaluationStrictness}
+        </if>
+    </select>
+
+</mapper>
