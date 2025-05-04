@@ -53,7 +53,7 @@ public class ReportController {
     }
 
     @GetMapping("/check")
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "관리자 신고 검토 리스트 조회", description = "관리자가 처리해야 할 신고 검토 리스트를 조회합니다.")
     public ResponseEntity<ApiResponse<ReportCheckListResponse>> getReportCheckList() {
         ReportCheckListResponse response = reportService.getReportCheckList();

@@ -15,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -50,15 +53,17 @@ public class SecurityConfig {
                                         "/swagger-resources/**",
                                         "/v3/api-docs/**",
                                         "/webjars/**"
+                                        ,"/admin/**",
+                                        "/report/check"
                                 ).permitAll()
-                                .requestMatchers(HttpMethod.GET, "/board/search", "/board/search/content", "/board/category/{category-id:[\\d]+}", "/board/{board-id:[\\d]+}").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/board/search", "/board/search/content", "/board/category/{category-id:[\\d]+}", "/board/{board-id:[\\d]+}","/admin/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/ws-stomp/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/board/*/comments").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/board/*/like/count").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/comment/*/like/count").permitAll()
                                 .requestMatchers("/user/info", "/mypage/**", "/user/change-password","/user/change-email", "/user/dev-mbti").authenticated()
-                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+//                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers("/interview-room/**").hasAuthority("USER")
                                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                                 .anyRequest().authenticated()
@@ -72,7 +77,28 @@ public class SecurityConfig {
                 )
                 // 커스텀 인증 필터(JWT 토큰 사용하여 확인)를 인증 필터 앞에 삽입
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.cors(cors -> cors
+                .configurationSource(corsConfigurationSource()));
         return http.build();
+    }
+
+    // CORS 설정
+    private UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("http://localhost:5173");  // 허용할 출처
+        corsConfiguration.addAllowedMethod(HttpMethod.GET);  // 허용할 HTTP 메서드
+        corsConfiguration.addAllowedMethod(HttpMethod.POST);
+        corsConfiguration.addAllowedMethod(HttpMethod.PUT);
+        corsConfiguration.addAllowedMethod(HttpMethod.DELETE);
+        corsConfiguration.addAllowedHeader("*");  // 모든 헤더 허용
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
+    }
+    @Bean
+    public CorsFilter corsFilter() {
+        return new CorsFilter(corsConfigurationSource());
     }
 
     @Bean
