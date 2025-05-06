@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -39,20 +40,20 @@ public class PostCommandService {
                 .build();
         Board saved = postRepository.save(board);
 
-        // Elasticsearch에 동기화
-        BoardDocument post = BoardDocument.builder()
+        // Elasticsearch 동기화
+        postElasticRepository.save(BoardDocument.builder()
                 .boardId(String.valueOf(saved.getBoardId()))
                 .boardTitle(postCreateRequest.getBoardTitle())
                 .boardContents(postCreateRequest.getBoardContents())
                 .createdAt(saved.getBoardCreatedAt())
-                .build();
+                .build());
 
-        postElasticRepository.save(post);  // Elasticsearch에 저장
+        // 임시 이미지 이동 처리
+        if (postCreateRequest.getUsedImageUrls() != null) {
+            attachmentService.migrateTempImages(postCreateRequest.getUsedImageUrls(), saved.getBoardId(), userId);
+        }
 
-        // 파일 업로드 및 첨부파일 저장
-        attachmentService.uploadAndSaveFiles(multipartFiles, saved.getBoardId(), userId);
-
-        // 투표 저장
+        // 투표 처리
         if (postCreateRequest.getVote() != null) {
             voteCommandService.createVote(postCreateRequest.getVote(), saved.getBoardId());
         }
@@ -61,6 +62,12 @@ public class PostCommandService {
                 .postId(saved.getBoardId())
                 .build();
     }
+
+
+    public Map<String, String> uploadTempImage(MultipartFile image, int userId) {
+        return attachmentService.uploadTempImage(image, userId);
+    }
+
 
     @Transactional
     public void deletePost(int boardId, int userId) {

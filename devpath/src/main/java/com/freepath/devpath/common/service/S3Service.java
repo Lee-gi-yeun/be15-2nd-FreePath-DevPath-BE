@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Utilities;
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -35,6 +36,16 @@ public class S3Service {
         return getFileUrl(key);
     }
 
+    public void copyObject(String sourceKey, String targetKey) {
+        CopyObjectRequest copyRequest = CopyObjectRequest.builder()
+                .sourceBucket(bucketName)
+                .sourceKey(sourceKey)
+                .destinationBucket(bucketName)
+                .destinationKey(targetKey)
+                .build();
+
+        s3Client.copyObject(copyRequest);
+    }
 
     public void deleteFile(String key) {
         s3Client.deleteObject(DeleteObjectRequest.builder()
@@ -43,7 +54,7 @@ public class S3Service {
                 .build());
     }
 
-    private String getFileUrl(String key) {
+    public String getFileUrl(String key) {
         S3Utilities utilities = s3Client.utilities();
         return utilities.getUrl(builder -> builder.bucket(bucketName).key(key)).toString();
     }

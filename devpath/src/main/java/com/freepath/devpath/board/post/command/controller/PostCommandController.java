@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,6 +51,18 @@ public class PostCommandController {
         return ResponseEntity
                 .status(HttpStatusCode.CREATED)
                 .body(ApiResponse.success(postCreateResponse));
+    }
+
+    @PostMapping("/image/temp")
+    @Operation(summary = "임시 이미지 업로드", description = "Quill 에디터에서 사용하는 임시 이미지를 S3에 업로드합니다.")
+    public ResponseEntity<ApiResponse<Map<String, String>>> uploadTempImage(
+            @RequestPart("image") MultipartFile image,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        int userId = Integer.parseInt(userDetails.getUsername());
+        Map<String, String> result = postCommandService.uploadTempImage(image, userId);
+
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 
     @PutMapping("/{board-id}")
