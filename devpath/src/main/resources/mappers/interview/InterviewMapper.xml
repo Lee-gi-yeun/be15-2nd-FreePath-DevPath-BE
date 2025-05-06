@@ -15,11 +15,13 @@
         <result property="evaluationStrictness" column="evaluation_strictness" />
         <result property="interviewRoomStatus" column="interview_room_status"/>
         <result property="interviewRoomCreatedAt" column="interview_room_created_at"/>
+        <result property="averageScore" column="average_score"/>
     </resultMap>
 
     <!-- 상세 조회용 -->
     <resultMap id="InterviewRoomDetailResultMap" type="com.freepath.devpath.interview.query.dto.InterviewRoomDetailResponse" extends="InterviewRoomDtoResultMap">
         <result property="interviewRoomMemo" column="interview_room_memo"/>
+        <result property="averageScore" column="average_score"/>
     </resultMap>
 
     <!-- 재실행된 면접방 조회용 -->
@@ -50,7 +52,8 @@
             difficulty_level,
             evaluation_strictness,
             interview_room_status,
-            interview_room_created_at
+            interview_room_created_at,
+            average_score
         FROM INTERVIEW_ROOM
         WHERE user_id = #{userId}
             AND interview_room_status != 'EXPIRED'
@@ -76,7 +79,8 @@
             difficulty_level,
             evaluation_strictness,
             interview_room_status,
-            interview_room_created_at
+            interview_room_created_at,
+            average_score
         FROM INTERVIEW_ROOM
         WHERE user_id = #{userId}
             AND interview_room_status != 'EXPIRED'
@@ -121,7 +125,8 @@
             evaluation_strictness,
             interview_room_status,
             interview_room_memo,
-            interview_room_created_at
+            interview_room_created_at,
+            average_score
         FROM INTERVIEW_ROOM
         WHERE interview_room_id = #{interviewRoomId}
     </select>

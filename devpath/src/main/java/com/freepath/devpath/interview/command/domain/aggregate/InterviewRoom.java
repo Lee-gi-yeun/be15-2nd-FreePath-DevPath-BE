@@ -42,6 +42,9 @@ public class InterviewRoom {
 
     private LocalDateTime interviewRoomCreatedAt;
 
+    @Column
+    private Integer averageScore;
+
     @PrePersist
     protected void onCreate() {
         this.interviewRoomCreatedAt = LocalDateTime.now();
@@ -60,9 +63,15 @@ public class InterviewRoom {
         this.interviewRoomStatus = status;
     }
 
-    /* 면접방 메모를 변경*/
+    /* 면접방 메모를 변경 */
     public void updateMemo(String memo) {
         this.interviewRoomMemo = memo;
     }
+
+    /* 면접방 평점을 등록 */
+    public void updateAverageScore(int averageScore) {
+        this.averageScore = averageScore;
+    }
+
 
 }
