@@ -16,6 +16,7 @@
         <result property="interviewRoomStatus" column="interview_room_status"/>
         <result property="interviewRoomCreatedAt" column="interview_room_created_at"/>
         <result property="averageScore" column="average_score"/>
+        <result property="summary" column="summary"/>
     </resultMap>
 
     <!-- 상세 조회용 -->
@@ -53,11 +54,19 @@
             evaluation_strictness,
             interview_room_status,
             interview_room_created_at,
-            average_score
-        FROM INTERVIEW_ROOM
-        WHERE user_id = #{userId}
-            AND interview_room_status != 'EXPIRED'
-        ORDER BY interview_room_id DESC
+            average_score,
+                (
+                SELECT i.interview_message
+                FROM INTERVIEW i
+                WHERE i.interview_room_id = ir.interview_room_id
+                AND i.interview_message LIKE '[총평]%'
+                ORDER BY i.interview_id DESC
+                LIMIT 1
+                ) AS summary
+        FROM INTERVIEW_ROOM ir
+        WHERE ir.user_id = #{userId}
+            AND ir.interview_room_status != 'EXPIRED'
+        ORDER BY ir.interview_room_created_at DESC
         LIMIT #{size} OFFSET #{offset}
     </select>
 
