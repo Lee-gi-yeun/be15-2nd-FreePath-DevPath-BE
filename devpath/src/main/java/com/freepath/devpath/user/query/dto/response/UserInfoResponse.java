@@ -13,4 +13,5 @@ public class UserInfoResponse {
     private String userName;
     private String nickname;
     private String developerPersonality;
+    private String itNewsSubscription;
 }

@@ -18,12 +18,12 @@ public class WaitingRoomCommandController {
     private final WaitingRoomCommandService waitingRoomCommandService;
 
     @Operation(summary = "그룹채팅방 참여 요청", description = "그룹채팅방id를 이용하여 참여 요청을 보낸다")
-    @PostMapping("/chatting/waitingRoom/{chattingRoomId}")
+    @PostMapping("/chatting/waitingRoom/{boardId}")
     public ResponseEntity<ApiResponse<Void>> groupChattingJoin(
-            @PathVariable int chattingRoomId,
+            @PathVariable int boardId,
             @AuthenticationPrincipal UserDetails userDetails
             ){
-        waitingRoomCommandService.joinRequest(chattingRoomId, userDetails.getUsername());
+        waitingRoomCommandService.joinRequest(boardId, userDetails.getUsername());
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
