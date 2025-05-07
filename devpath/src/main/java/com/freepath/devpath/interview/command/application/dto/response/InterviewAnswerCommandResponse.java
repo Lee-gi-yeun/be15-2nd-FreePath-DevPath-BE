@@ -10,4 +10,5 @@ public class InterviewAnswerCommandResponse {
     private String userAnswer;
     private String gptEvaluation;
     private String nextQuestion;
+    private Integer averageScore;
 }

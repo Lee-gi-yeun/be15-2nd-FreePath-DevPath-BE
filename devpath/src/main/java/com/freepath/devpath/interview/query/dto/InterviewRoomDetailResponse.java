@@ -17,6 +17,7 @@ public class InterviewRoomDetailResponse {
     private String evaluationStrictness;
     private String interviewRoomStatus;
     private String interviewRoomMemo;
+    private Integer averageScore;
     private LocalDateTime interviewRoomCreatedAt;
     private List<InterviewDetailDto> interviewList;
     private List<ReexecutedRoomDto> reexecutedRooms;

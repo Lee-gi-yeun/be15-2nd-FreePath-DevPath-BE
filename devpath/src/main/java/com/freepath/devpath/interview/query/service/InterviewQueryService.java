@@ -142,6 +142,7 @@ public class InterviewQueryService {
             response.setInterviewRoomCreatedAt(room.getInterviewRoomCreatedAt());
             response.setInterviewList(interviews);
             response.setReexecutedRooms(reexecutedRooms);
+            response.setAverageScore(room.getAverageScore());
         } catch(Exception e){
             throw new InterviewRoomQueryCreationException(ErrorCode.INTERVIEW_QUERY_CREATION_FAILED);
         }
