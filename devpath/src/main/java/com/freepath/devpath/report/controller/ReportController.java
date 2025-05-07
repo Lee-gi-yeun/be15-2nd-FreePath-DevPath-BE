@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -60,6 +61,7 @@ public class ReportController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+
     @PostMapping("/check/{reportId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "관리자 신고 검토 처리", description = "관리자가 신고 검토 요청을 처리하고 결과를 기록합니다.")
@@ -74,7 +76,6 @@ public class ReportController {
         reportService.processReportCheck(reportCheckId, reportCheckRequest, adminId);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
-
 
     @ExceptionHandler(NoSuchReportCheckException.class)
     public ResponseEntity<ApiResponse<Void>> handleNoSuchReportCheckException(NoSuchReportCheckException e) {
