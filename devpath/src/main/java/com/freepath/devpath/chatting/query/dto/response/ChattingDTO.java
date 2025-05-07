@@ -12,4 +12,5 @@ public class ChattingDTO {
     private String nickname;
     private String message;
     private String timestamp;
+    private boolean isMine;
 }
