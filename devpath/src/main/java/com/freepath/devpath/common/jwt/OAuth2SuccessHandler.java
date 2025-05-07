@@ -57,7 +57,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             );
 
             try {
-                response.sendRedirect(redirectUrl + "/after.html?accessToken=" + accessToken + "&refreshToken=" + refreshToken);
+                response.sendRedirect(redirectUrl);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -65,7 +65,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         }, () -> {
             // 유저가 없으면 회원가입 페이지로 리디렉션
             try {
-                response.sendRedirect(redirectUrl + "/signup-social.html?email=" + email);
+                response.sendRedirect(redirectUrl + "/user/signup/google");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

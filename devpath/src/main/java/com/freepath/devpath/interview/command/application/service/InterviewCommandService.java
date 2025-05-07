@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -177,7 +178,22 @@ public class InterviewCommandService {
             );
         }
 
-        // 5. 마지막 답변이라면 면접 총평 생성하고 면접방 상태 변경
+        // 5. 평균 점수 계산
+        List<String> evaluationMessages = interviewRepository.findByInterviewRoomId(roomId).stream()
+                .filter(i -> i.getInterviewRole() == InterviewRole.AI)
+                .map(Interview::getInterviewMessage)
+                .filter(msg -> msg.startsWith("[답변 평가]"))
+                .toList();
+
+        List<Integer> scores = evaluationMessages.stream()
+                .map(this::extractScore)
+                .filter(Objects::nonNull)
+                .toList();
+
+        int averageScore = scores.isEmpty() ? 0 :
+                (int) scores.stream().mapToInt(Integer::intValue).average().orElse(0);
+
+        // 6. 마지막 답변이라면 면접 총평 생성하고 면접방 상태 변경
         if(interviewIndex == 3){
             List<String> gptEvaluations = interviewRepository.findByInterviewRoomId(roomId).stream()
                     .filter(interview -> interview.getInterviewRole() == InterviewRole.AI)
@@ -195,15 +211,32 @@ public class InterviewCommandService {
             );
 
             room.updateStatus(InterviewRoomStatus.COMPLETED);
+
+            room.updateAverageScore(averageScore);
         }
 
-        // 6. 응답
+        // 7. 응답
         return InterviewAnswerCommandResponse.builder()
                 .interviewRoomId(roomId)
                 .userAnswer(request.getUserAnswer())
                 .gptEvaluation(evaluation)
                 .nextQuestion(nextQuestion)
+                .averageScore(averageScore)
                 .build();
+    }
+
+    private Integer extractScore(String evaluation) {
+        try {
+            int startIdx = evaluation.indexOf("총점: #") + 5;
+            if (startIdx >= 5) {
+                int endIdx = evaluation.indexOf("\n", startIdx);
+                String scoreStr = (endIdx != -1)
+                        ? evaluation.substring(startIdx, endIdx).trim()
+                        : evaluation.substring(startIdx).trim();
+                return Integer.parseInt(scoreStr);
+            }
+        } catch (Exception ignored) {}
+        return null;
     }
 
     /* 기존의 면접방 재실행 */

@@ -110,7 +110,8 @@ public class ChattingCommandService {
                         chat.getUserId(),
                         userIdToNickname.getOrDefault(chat.getUserId(), "알 수 없음"),
                         chat.getChattingMessage(),
-                        chat.getChattingCreatedAt().toString()
+                        chat.getChattingCreatedAt().toString(),
+                        (userId==chat.getUserId())
                 ))
                 .collect(Collectors.toList());
         return new ChattingListResponse(chattingDTOList);
