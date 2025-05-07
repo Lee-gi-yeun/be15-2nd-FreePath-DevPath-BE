@@ -17,6 +17,7 @@ public class MyCommentResponseDto {
     private Date createdAt;
     private Date modifiedAt;
     private String isCommentDeleted;
+    private String nickName;
 
     public MyCommentResponseDto withContents(String newContents) {
         return this.toBuilder()
