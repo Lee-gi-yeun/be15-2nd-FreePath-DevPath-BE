@@ -19,10 +19,21 @@ public interface InterviewMapper {
 
     /* 사용자가 면접방 목록 조회 시 필터 적용 */
     List<InterviewRoomDto> selectInterviewRoomListByFilter(
-            Long userId, String category, String difficultyLevel, String evaluationStrictness,
-            int size, int offset);
+            Long userId,
+            String category,
+            String difficultyLevel,
+            String evaluationStrictness,
+            String sortOrder, // 추가된 파라미터
+            int size,
+            int offset
+    );
+
     int countInterviewRoomListByFilter(
-            Long userId, String category, String difficultyLevel, String evaluationStrictness);
+            Long userId,
+            String category,
+            String difficultyLevel,
+            String evaluationStrictness
+    );
 
     /* 면접방에 대한 정보 조회 */
     InterviewRoomDetailResponse selectInterviewRoomByRoomId(Long interviewRoomId);
@@ -43,7 +54,7 @@ public interface InterviewMapper {
     int countAllInterviewRooms();
 
     /* 전체 유저 면접방 목록 조회에 필터 적용 */
-    List<InterviewRoomDto> selectAdminInterviewRoomListByFilter(String status, String category, String difficultyLevel, String evaluationStrictness, int size, int offset    );
+    List<InterviewRoomDto> selectAdminInterviewRoomListByFilter(String status, String category, String difficultyLevel, String evaluationStrictness, String sortOrder, int size, int offset);
     int countAdminInterviewRoomListByFilter( String status, String category, String difficultyLevel, String evaluationStrictness );
 
 

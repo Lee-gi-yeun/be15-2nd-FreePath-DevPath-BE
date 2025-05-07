@@ -54,19 +54,23 @@ public class InterviewQueryAdminService {
     @Transactional(readOnly = true)
     public InterviewRoomListResponse getAdminFilteredInterviewRoomList(
             String status, String category, String difficultyLevel, String evaluationStrictness,
-            int page, int size) {
+            String sortOrder,
+            int page, int size
+    ) {
 
         int offset = (page - 1) * size;
 
         List<InterviewRoomDto> rooms = interviewMapper.selectAdminInterviewRoomListByFilter(
-                status, category, difficultyLevel, evaluationStrictness, size, offset);
+                status, category, difficultyLevel, evaluationStrictness, sortOrder, size, offset
+        );
 
         if (rooms == null || rooms.isEmpty()) {
             throw new InterviewRoomQueryNotFoundException(ErrorCode.INTERVIEW_ROOM_QUERY_NOT_FOUND);
         }
 
         int totalItems = interviewMapper.countAdminInterviewRoomListByFilter(
-                status, category, difficultyLevel, evaluationStrictness);
+                status, category, difficultyLevel, evaluationStrictness
+        );
 
         Pagination pagination = Pagination.builder()
                 .currentPage(page)
