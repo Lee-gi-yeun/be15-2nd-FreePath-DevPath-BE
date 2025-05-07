@@ -39,6 +39,7 @@ public class CommentQueryService {
 
 
             CommentTreeDto node = CommentTreeDto.builder()
+                    .userId(flat.getUserId())
                     .commentId(flat.getCommentId())
                     .nickname(flat.getNickname())
                     .contents(contents)

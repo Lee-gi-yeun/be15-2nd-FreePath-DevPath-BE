@@ -11,6 +11,7 @@
             resultType="com.freepath.devpath.board.comment.query.dto.HierarchicalCommentDto">
         WITH RECURSIVE comment_tree AS (
             SELECT
+                c.user_id,
                 c.comment_id,
                 c.parent_comment_id,
                 c.board_id,
@@ -28,6 +29,7 @@
             UNION ALL
 
             SELECT
+                c.user_id,
                 c.comment_id,
                 c.parent_comment_id,
                 c.board_id,
