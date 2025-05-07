@@ -60,7 +60,9 @@ public class AuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .role(user.getUserRole().name())
+                .userId(user.getUserId())
                 .build();
+
     }
 
 
