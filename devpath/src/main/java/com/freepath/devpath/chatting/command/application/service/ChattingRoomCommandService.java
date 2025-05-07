@@ -19,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ChattingRoomCommandService {
@@ -36,9 +38,11 @@ public class ChattingRoomCommandService {
             int inviteeId
     ) {
         int creatorId = Integer.parseInt(username);
-        //이미 생성되어 있는 일대일 채팅방의 경우 예외처리
-        if(chattingRoomRepository.findValidChattingRoom(creatorId, inviteeId).isPresent()){
-            throw new ChattingRoomException(ErrorCode.CHATTING_ROOM_ALREADY_EXISTS);
+        Optional<Integer> optionalChattingRoomId = chattingRoomRepository.findValidChattingRoom(creatorId, inviteeId);
+        //이미 생성되어 있는 일대일 채팅방의 경우 기존 채팅방 id반환
+        if(optionalChattingRoomId.isPresent()){
+            int chattingRoomId = optionalChattingRoomId.get();
+            return new ChattingRoomCommandResponse(chattingRoomId);
         }
         ChattingRoom chattingRoom = ChattingRoom.builder()
                 .userCount(2)
