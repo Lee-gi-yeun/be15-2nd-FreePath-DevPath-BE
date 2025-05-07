@@ -15,4 +15,6 @@ public class InterviewRoomDto {
     private String evaluationStrictness;
     private String interviewRoomStatus;
     private LocalDateTime interviewRoomCreatedAt;
+    private Integer averageScore;
+    private String summary;
 }
