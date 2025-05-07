@@ -21,16 +21,16 @@ public class WaitingRoomCommandService {
     private final ChattingJoinCommandService chattingJoinCommandService;
     private final ChattingCommandService chattingCommandService;
     @Transactional
-    public void joinRequest(int chattingRoomId, String username) {
+    public void joinRequest(int boardId, String username) {
         int userId = Integer.parseInt(username);
 
-        ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId).orElseThrow(
+        ChattingRoom chattingRoom = chattingRoomRepository.findByBoardId(boardId).orElseThrow(
                 () -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM)
         );
         if(chattingRoom.getBoardId() == null){
             throw new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM);
         }
-        chattingJoinCommandService.setWaitingStatus(chattingRoomId,userId);
+        chattingJoinCommandService.setWaitingStatus(chattingRoom.getChattingRoomId(),userId);
     }
     @Transactional
     public void requestRespond(WaitingRoomActionRequest request, String username) {
