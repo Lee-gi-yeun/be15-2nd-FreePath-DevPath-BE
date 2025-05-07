@@ -65,7 +65,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         }, () -> {
             // 유저가 없으면 회원가입 페이지로 리디렉션
             try {
-                response.sendRedirect(redirectUrl + "/user/signup/google");
+                response.sendRedirect(redirectUrl + "/user/signup/google?email=" + email);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
