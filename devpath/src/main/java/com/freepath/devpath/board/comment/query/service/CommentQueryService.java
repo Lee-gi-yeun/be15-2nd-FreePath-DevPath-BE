@@ -22,10 +22,6 @@ public class CommentQueryService {
     public List<CommentTreeDto> getCommentsAsTree(int boardId) {
         List<HierarchicalCommentDto> flatList = commentMapper.findHierarchicalComments(boardId);
 
-        if (flatList.isEmpty()) {
-            throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
-        }
-
         Map<Integer, CommentTreeDto> dtoMap = new HashMap<>();
         List<CommentTreeDto> result = new ArrayList<>();
 

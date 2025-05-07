@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -22,6 +24,8 @@ public class PostCreateRequest {
 
     @NotBlank(message = "내용은 필수입니다.")
     private String boardContents;      // 내용
+
+    private List<String> usedImageUrls;
 
     @Valid
     private VoteCreateRequest vote;

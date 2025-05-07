@@ -53,18 +53,15 @@ public class SecurityConfig {
                                         "/swagger-resources/**",
                                         "/v3/api-docs/**",
                                         "/webjars/**"
-                                        ,"/admin/**",
-                                        "/report/check",
-                                        "/report/check/**"
                                 ).permitAll()
-                                .requestMatchers(HttpMethod.GET, "/board/search", "/board/search/content", "/board/category/{category-id:[\\d]+}", "/board/{board-id:[\\d]+}","/admin/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/board/search", "/board/search/content", "/board/category/{category-id:[\\d]+}", "/board/{board-id:[\\d]+}").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/ws-stomp/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/board/*/comments").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/board/*/like/count").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/comment/*/like/count").permitAll()
                                 .requestMatchers("/user/info", "/mypage/**", "/user/change-password","/user/change-email", "/user/dev-mbti").authenticated()
-//                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers("/interview-room/**").hasAuthority("USER")
                                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                                 .anyRequest().authenticated()
@@ -78,32 +75,32 @@ public class SecurityConfig {
                 )
                 // 커스텀 인증 필터(JWT 토큰 사용하여 확인)를 인증 필터 앞에 삽입
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        /* CORS 설정 */
         http.cors(cors -> cors
                 .configurationSource(corsConfigurationSource()));
         return http.build();
     }
 
-    // CORS 설정
-    private UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("http://localhost:5173");  // 허용할 출처
-        corsConfiguration.addAllowedMethod(HttpMethod.GET);  // 허용할 HTTP 메서드
-        corsConfiguration.addAllowedMethod(HttpMethod.POST);
-        corsConfiguration.addAllowedMethod(HttpMethod.PUT);
-        corsConfiguration.addAllowedMethod(HttpMethod.DELETE);
-        corsConfiguration.addAllowedHeader("*");  // 모든 헤더 허용
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService);
     }
+
     @Bean
     public CorsFilter corsFilter() {
         return new CorsFilter(corsConfigurationSource());
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService);
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("http://localhost:5173"); // 허용할 도메인
+        config.addAllowedHeader("*"); // 모든 헤더 허용
+        config.addAllowedMethod("*"); // 모든 HTTP 메소드 허용
+        config.setAllowCredentials(true);// 자격 증명(쿠키 등) 허용
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);// 모든 경로에 대해 설정
+        return source;
     }
 }
