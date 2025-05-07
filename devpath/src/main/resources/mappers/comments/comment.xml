@@ -53,9 +53,11 @@
         c.comment_contents AS contents,
         c.comment_created_at AS createdAt,
         c.comment_modified_at AS modifiedAt,
-        c.is_comment_deleted AS isCommentDeleted
+        c.is_comment_deleted AS isCommentDeleted,
+        u.nickname AS nickName
         FROM comment c
         JOIN board b ON c.board_id = b.board_id
+        JOIN users u ON c.user_id = u.user_id
         WHERE c.user_id = #{userId}
         ORDER BY c.comment_created_at DESC
         LIMIT #{limit} OFFSET #{offset}
@@ -75,9 +77,11 @@
         c.comment_contents AS contents,
         c.comment_created_at AS createdAt,
         c.comment_modified_at AS modifiedAt,
-        c.is_comment_deleted AS isCommentDeleted
+        c.is_comment_deleted AS isCommentDeleted,
+        u.nickname AS nickName
         FROM comment c
         JOIN board b ON c.board_id = b.board_id
+        JOIN users u ON c.user_id = u.user_id
         WHERE c.user_id = #{userId}
         AND c.is_comment_deleted = 'R'
         ORDER BY c.comment_created_at DESC
