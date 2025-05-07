@@ -17,7 +17,7 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Inte
     HAVING COUNT(DISTINCT cj.user_id) = 2
        AND SUM(CASE WHEN cj.chatting_join_status = 'Y' THEN 1 ELSE 0 END) >= 1
 """, nativeQuery = true)
-    Optional<Long> findValidChattingRoom(@Param("userId1") int userId1, @Param("userId2") int userId2);
+    Optional<Integer> findValidChattingRoom(@Param("userId1") int userId1, @Param("userId2") int userId2);
 
 
     Optional<ChattingRoom> findByBoardId(int boardId);
