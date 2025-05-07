@@ -44,7 +44,8 @@
                 USERS u
         JOIN
                 CHATTING_JOIN cj ON u.user_id = cj.user_id
-        WHERE cj.chatting_room_id = #{chattingRoomId};
+        WHERE cj.chatting_room_id = #{chattingRoomId}
+        AND cj.chatting_join_status='Y';
     </select>
     <select id = "selectWaitingRoom" resultType="com.freepath.devpath.chatting.query.dto.response.WaitingChattingRoomDTO">
         SELECT chatting_room_title FROM chatting_room cr

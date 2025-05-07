@@ -61,6 +61,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/board/*/like/count").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/comment/*/like/count").permitAll()
                                 .requestMatchers("/user/info", "/mypage/**", "/user/change-password","/user/change-email", "/user/dev-mbti").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/mypage/devti/result").permitAll()
                                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers("/interview-room/**").hasAuthority("USER")
                                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
