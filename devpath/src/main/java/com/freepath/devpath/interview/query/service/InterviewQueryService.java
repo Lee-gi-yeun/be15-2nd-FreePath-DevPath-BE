@@ -60,6 +60,7 @@ public class InterviewQueryService {
     @Transactional(readOnly = true)
     public InterviewRoomListResponse getFilteredInterviewRoomList(
             Long userId, String category, String difficultyLevel, String evaluationStrictness,
+            String sortOrder,
             int page, int size
     ) {
         List<InterviewRoomDto> response;
@@ -67,18 +68,21 @@ public class InterviewQueryService {
 
         // 면접방 불러오기
         try {
-            response = interviewMapper.selectInterviewRoomListByFilter(userId, category, difficultyLevel, evaluationStrictness, size, offset);
+            response = interviewMapper.selectInterviewRoomListByFilter(
+                    userId, category, difficultyLevel, evaluationStrictness, sortOrder, size, offset
+            );
         } catch (Exception e) {
             throw new InterviewRoomQueryCreationException(ErrorCode.INTERVIEW_QUERY_CREATION_FAILED);
         }
 
-        // 유효한 면접방인지 확인
         if (response == null || response.isEmpty()) {
             throw new InterviewRoomQueryNotFoundException(ErrorCode.INTERVIEW_ROOM_QUERY_NOT_FOUND);
         }
 
-        // 페이징 처리
-        int totalItems = interviewMapper.countInterviewRoomListByFilter(userId, category, difficultyLevel, evaluationStrictness);
+        int totalItems = interviewMapper.countInterviewRoomListByFilter(
+                userId, category, difficultyLevel, evaluationStrictness
+        );
+
         Pagination pagination = Pagination.builder()
                 .currentPage(page)
                 .totalPage((int) Math.ceil((double) totalItems / size))

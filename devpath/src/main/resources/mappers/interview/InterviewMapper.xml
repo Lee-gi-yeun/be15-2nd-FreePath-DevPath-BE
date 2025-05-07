@@ -65,7 +65,7 @@
                 ) AS summary
         FROM INTERVIEW_ROOM ir
         WHERE ir.user_id = #{userId}
-            AND ir.interview_room_status != 'EXPIRED'
+            AND ir.interview_room_status = 'COMPLETED'
         ORDER BY ir.interview_room_created_at DESC
         LIMIT #{size} OFFSET #{offset}
     </select>
@@ -75,34 +75,44 @@
         SELECT COUNT(*)
         FROM INTERVIEW_ROOM
         WHERE user_id = #{userId}
-            AND interview_room_status != 'EXPIRED'
+            AND interview_room_status = 'COMPLETED'
     </select>
 
     <!-- 면접방 목록 조회 : 필터 적용(카테고리/난이도/엄격도) -->
     <select id="selectInterviewRoomListByFilter" resultMap="InterviewRoomDtoResultMap">
         SELECT
-            interview_room_id,
-            user_id,
-            interview_room_title,
-            interview_category,
-            difficulty_level,
-            evaluation_strictness,
-            interview_room_status,
-            interview_room_created_at,
-            average_score
+        interview_room_id,
+        user_id,
+        interview_room_title,
+        interview_category,
+        difficulty_level,
+        evaluation_strictness,
+        interview_room_status,
+        interview_room_created_at,
+        average_score
         FROM INTERVIEW_ROOM
         WHERE user_id = #{userId}
-            AND interview_room_status != 'EXPIRED'
-            <if test="category != null and category != ''">
-                AND interview_category = #{category}
-            </if>
-            <if test="difficultyLevel != null and difficultyLevel != ''">
-                AND difficulty_level = #{difficultyLevel}
-            </if>
-            <if test="evaluationStrictness != null and evaluationStrictness != ''">
-                AND evaluation_strictness = #{evaluationStrictness}
-            </if>
-        ORDER BY interview_room_id DESC
+        AND interview_room_status = 'COMPLETED'
+        <if test="category != null and category != ''">
+            AND interview_category = #{category}
+        </if>
+        <if test="difficultyLevel != null and difficultyLevel != ''">
+            AND difficulty_level = #{difficultyLevel}
+        </if>
+        <if test="evaluationStrictness != null and evaluationStrictness != ''">
+            AND evaluation_strictness = #{evaluationStrictness}
+        </if>
+        <choose>
+            <when test="sortOrder == 'asc'">
+                ORDER BY average_score ASC
+            </when>
+            <when test="sortOrder == 'desc'">
+                ORDER BY average_score DESC
+            </when>
+            <otherwise>
+                ORDER BY interview_room_id DESC
+            </otherwise>
+        </choose>
         LIMIT #{size} OFFSET #{offset}
     </select>
 
@@ -111,7 +121,7 @@
         SELECT COUNT(*)
         FROM INTERVIEW_ROOM
         WHERE user_id = #{userId}
-            AND interview_room_status != 'EXPIRED'
+            AND interview_room_status = 'COMPLETED'
             <if test="category != null and category != ''">
                 AND interview_category = #{category}
             </if>

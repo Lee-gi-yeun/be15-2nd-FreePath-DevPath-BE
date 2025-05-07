@@ -56,11 +56,12 @@ public class InterviewAdminQueryController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String difficultyLevel,
             @RequestParam(required = false) String evaluationStrictness,
+            @RequestParam(required = false, defaultValue = "desc") String sortOrder, // ✅ 추가됨
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         InterviewRoomListResponse response = interviewQueryAdminService.getAdminFilteredInterviewRoomList(
-                status, category, difficultyLevel, evaluationStrictness, page, size);
+                status, category, difficultyLevel, evaluationStrictness, sortOrder, page, size); // ✅ 반영됨
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }

@@ -73,12 +73,13 @@ public class InterviewQueryController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String difficultyLevel,
             @RequestParam(required = false) String evaluationStrictness,
+            @RequestParam(required = false, defaultValue = "desc") String sortOrder,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Long userId = Long.valueOf(userDetails.getUsername());
         InterviewRoomListResponse response = interviewQueryService.getFilteredInterviewRoomList(
-                userId, category, difficultyLevel, evaluationStrictness, page, size);
+                userId, category, difficultyLevel, evaluationStrictness, sortOrder, page, size);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
