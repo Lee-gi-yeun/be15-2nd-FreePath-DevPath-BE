@@ -25,8 +25,6 @@
                 AND DATE_FORMAT(mailing_date, '%Y-%m-%d') = #{mailingDate}
             </if>
         </where>
-        ORDER BY mailing_date DESC
-        LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <!-- 총 개수 조회 -->
@@ -44,6 +42,8 @@
                 AND DATE_FORMAT(mailing_date, '%Y-%m-%d') = #{mailingDate}
             </if>
         </where>
+        ORDER BY it_news_id DESC
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
 </mapper>
