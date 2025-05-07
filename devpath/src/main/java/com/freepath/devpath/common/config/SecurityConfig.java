@@ -54,7 +54,8 @@ public class SecurityConfig {
                                         "/v3/api-docs/**",
                                         "/webjars/**"
                                         ,"/admin/**",
-                                        "/report/check"
+                                        "/report/check",
+                                        "/report/check/**"
                                 ).permitAll()
                                 .requestMatchers(HttpMethod.GET, "/board/search", "/board/search/content", "/board/category/{category-id:[\\d]+}", "/board/{board-id:[\\d]+}","/admin/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
