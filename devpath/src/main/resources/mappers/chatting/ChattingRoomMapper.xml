@@ -4,13 +4,26 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.freepath.devpath.chatting.query.mapper.ChattingRoomMapper">
     <select id="selectChattingRooms" resultType="com.freepath.devpath.chatting.query.dto.response.ChattingRoomDTO">
+        WITH OtherUser AS (
+        SELECT
+        cj_sub.chatting_room_id,
+        u.nickname,
+        ROW_NUMBER() OVER (PARTITION BY cj_sub.chatting_room_id ORDER BY u.nickname) as rn
+        FROM CHATTING_JOIN cj_sub
+        JOIN USERS u ON cj_sub.user_id = u.user_id
+        WHERE cj_sub.user_id != #{userId}
+        )
         SELECT
         cr.chatting_room_id,
+        COALESCE(
         cr.chatting_room_title,
+        COALESCE(ou.nickname, '상대방 없음')
+        ) AS chatting_room_title,
         cr.user_count
         FROM
         CHATTING_JOIN cj
         JOIN CHATTING_ROOM cr ON cj.chatting_room_id = cr.chatting_room_id
+        LEFT JOIN OtherUser ou ON ou.chatting_room_id = cr.chatting_room_id AND ou.rn = 1
         WHERE
         cj.user_id = #{userId}
         AND cj.chatting_join_status = 'Y'
@@ -23,6 +36,8 @@
         AND cj2.user_id != #{userId}
         AND cj2.chatting_role = 'ONE'
         );
+
+
     </select>
     <select id = "selectWaitingUsers" resultType="com.freepath.devpath.chatting.query.dto.response.ChattingRoomWaitingDTO">
         SELECT
