@@ -19,6 +19,7 @@
     <!-- 게시글 조회 쿼리 -->
     <select id="selectPostById" resultMap="PostWithAttachmentsMap">
         SELECT
+        b.user_id,
         u.nickname,
         b.board_title,
         b.board_contents,

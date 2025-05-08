@@ -10,6 +10,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class HierarchicalCommentDto {
+    private int userId;
     private int commentId;
     private Integer parentCommentId; // null 가능
     private String nickname;

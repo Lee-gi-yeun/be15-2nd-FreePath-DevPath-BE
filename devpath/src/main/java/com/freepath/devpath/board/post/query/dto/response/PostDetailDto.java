@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class PostDetailDto {
+    private int userId;
     private String nickname;
     private String boardTitle;
     private String boardContents;

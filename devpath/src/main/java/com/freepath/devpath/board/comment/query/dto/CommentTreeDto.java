@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentTreeDto {
+    private int userId;
     private int commentId;
     private String nickname;
     private String contents;
