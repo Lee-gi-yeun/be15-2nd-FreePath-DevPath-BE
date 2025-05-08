@@ -46,19 +46,21 @@
     <!-- 면접방 목록 조회 : 사용자별 -->
     <select id="selectInterviewRoomListByUserIdExcludingExpired" resultMap="InterviewRoomDtoResultMap">
         SELECT
-            interview_room_id,
-            user_id,
-            interview_room_title,
-            interview_category,
-            difficulty_level,
-            evaluation_strictness,
-            interview_room_status,
-            interview_room_created_at,
-            average_score,
+            ir.interview_room_id,
+            ir.user_id,
+            ir.interview_room_title,
+            ir.interview_category,
+            ir.difficulty_level,
+            ir.evaluation_strictness,
+            ir.interview_room_status,
+            ir.interview_room_created_at,
+            ir.average_score,
                 (
-                SELECT i.interview_message
-                FROM INTERVIEW i
+                SELECT
+                REPLACE(i.interview_message, '[총평]', '')
+                FROM interview i
                 WHERE i.interview_room_id = ir.interview_room_id
+                AND i.interview_role = 'AI'
                 AND i.interview_message LIKE '[총평]%'
                 ORDER BY i.interview_id DESC
                 LIMIT 1
@@ -89,8 +91,17 @@
         evaluation_strictness,
         interview_room_status,
         interview_room_created_at,
-        average_score
-        FROM INTERVIEW_ROOM
+        average_score,
+        (
+            SELECT REPLACE(i.interview_message, '[총평]', '')
+            FROM interview i
+            WHERE i.interview_room_id = ir.interview_room_id
+                AND i.interview_role = 'AI'
+                AND i.interview_message LIKE '[총평]%'
+            ORDER BY i.interview_id DESC
+            LIMIT 1
+        ) AS summary
+        FROM INTERVIEW_ROOM ir
         WHERE user_id = #{userId}
         AND interview_room_status = 'COMPLETED'
         <if test="category != null and category != ''">
