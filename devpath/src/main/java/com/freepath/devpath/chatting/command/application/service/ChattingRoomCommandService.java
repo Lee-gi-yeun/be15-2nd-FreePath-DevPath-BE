@@ -6,6 +6,8 @@ import com.freepath.devpath.board.post.query.exception.NoSuchPostException;
 import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomCreateRequest;
 import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomUpdateRequest;
 import com.freepath.devpath.chatting.command.application.dto.response.ChattingRoomCommandResponse;
+import com.freepath.devpath.chatting.command.domain.jpa.aggregate.ChattingJoin;
+import com.freepath.devpath.chatting.command.domain.jpa.aggregate.ChattingJoinId;
 import com.freepath.devpath.chatting.command.domain.jpa.aggregate.ChattingRole;
 import com.freepath.devpath.chatting.command.domain.jpa.aggregate.ChattingRoom;
 import com.freepath.devpath.chatting.command.domain.mongo.repository.ChattingRepository;
@@ -42,6 +44,10 @@ public class ChattingRoomCommandService {
         //이미 생성되어 있는 일대일 채팅방의 경우 기존 채팅방 id반환
         if(optionalChattingRoomId.isPresent()){
             int chattingRoomId = optionalChattingRoomId.get();
+            ChattingJoin chattingJoin = chattingJoinCommandService.findById(new ChattingJoinId(chattingRoomId,creatorId));
+            if(chattingJoin.getChattingJoinStatus()=='N') {
+                chattingJoin.setChattingJoinStatus('Y');
+            }
             return new ChattingRoomCommandResponse(chattingRoomId);
         }
         ChattingRoom chattingRoom = ChattingRoom.builder()
