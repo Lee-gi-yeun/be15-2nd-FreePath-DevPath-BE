@@ -31,7 +31,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         String email = ((org.springframework.security.oauth2.core.user.DefaultOAuth2User) authentication.getPrincipal()).getAttribute("email");
 
-        // 제재된 유저인지 먼저 확인
         boolean isRestrictedUser = userCommandRepository.existsByLoginIdAndLoginMethodAndIsUserRestricted(
                 email, "GOOGLE", "Y"
         );
@@ -40,9 +39,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             throw new UserException(ErrorCode.RESTRICTED_USER);
         }
 
-        // 로그인 처리
         userCommandRepository.findByLoginIdAndLoginMethodAndUserDeletedAtIsNull(email, "GOOGLE").ifPresentOrElse(user -> {
-            // 토큰 발급
             String accessToken = jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getUserRole().name());
             String refreshToken = jwtTokenProvider.createRefreshToken(String.valueOf(user.getUserId()), user.getUserRole().name());
 
@@ -56,8 +53,14 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                     Duration.ofDays(7)
             );
 
+            String targetUrl = redirectUrl + "/oauth2/success"
+                    + "?accessToken=" + accessToken
+                    + "&refreshToken=" + refreshToken
+                    + "&userId=" + user.getUserId()
+                    + "&role=" + user.getUserRole().name();
+
             try {
-                response.sendRedirect(redirectUrl);
+                response.sendRedirect(targetUrl);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
