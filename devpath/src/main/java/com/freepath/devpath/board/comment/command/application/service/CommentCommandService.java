@@ -1,5 +1,6 @@
 package com.freepath.devpath.board.comment.command.application.service;
 
+import com.freepath.devpath.board.comment.command.application.dto.CommentResponseDto;
 import com.freepath.devpath.board.comment.command.domain.domain.Comment;
 import com.freepath.devpath.board.comment.command.application.dto.CommentRequestDto;
 import com.freepath.devpath.board.comment.command.domain.repository.CommentRepository;
@@ -9,6 +10,7 @@ import com.freepath.devpath.board.comment.command.exception.CommentInvalidArgume
 import com.freepath.devpath.board.comment.command.exception.CommentNotFoundException;
 import com.freepath.devpath.board.comment.query.exception.NoSuchCommentException;
 import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +22,10 @@ import java.util.Date;
 public class CommentCommandService {
 
     private final CommentRepository commentRepository;
+    private final UserCommandRepository userCommandRepository;
 
     @Transactional
-    public Comment saveComment(CommentRequestDto dto, int userId) {
+    public CommentResponseDto saveComment(CommentRequestDto dto, int userId) {
         Integer boardId = dto.getBoardId();
         Integer parentCommentId = dto.getParentCommentId();
 
@@ -54,7 +57,24 @@ public class CommentCommandService {
                 .deleted('N')
                 .build();
 
-        return commentRepository.save(comment);
+        Comment saved = commentRepository.save(comment);
+
+        // ✅ 닉네임 조회
+        String nickname = userCommandRepository.findNicknameByUserId(userId)
+                .orElse("알 수 없음"); // orElseThrow로 수정 요망
+
+        // ✅ DTO 변환
+        return CommentResponseDto.builder()
+                .commentId(saved.getCommentId())
+                .userId(saved.getUserId())
+                .boardId(saved.getBoardId())
+                .parentCommentId(saved.getParentCommentId())
+                .contents(saved.getContents())
+                .createdAt(saved.getCreatedAt())
+                .modifiedAt(saved.getModifiedAt())
+                .deleted(saved.getDeleted())
+                .nickname(nickname)
+                .build();
     }
 
     @Transactional
