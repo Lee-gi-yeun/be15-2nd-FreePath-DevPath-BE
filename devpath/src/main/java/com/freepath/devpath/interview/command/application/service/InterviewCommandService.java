@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -275,14 +276,16 @@ public class InterviewCommandService {
                         .build()
         );
 
-        // 5. 복제된 질문 저장
-        for (Interview question : originalQuestions) {
-            interviewRepository.save(
-                    Interview.builder()
-                            .interviewRoomId(newRoom.getInterviewRoomId())
-                            .interviewRole(InterviewRole.AI)
-                            .interviewMessage(question.getInterviewMessage())
-                            .build()
+        // 3. 새 방 ID로 3개 질문 저장
+        List<String> questionMessages = new ArrayList<>();
+        for (Interview q : originalQuestions) {
+            String msg = q.getInterviewMessage();
+            questionMessages.add(msg);
+            interviewRepository.save(Interview.builder()
+                    .interviewRoomId(newRoom.getInterviewRoomId())
+                    .interviewRole(InterviewRole.AI)
+                    .interviewMessage(msg)
+                    .build()
             );
         }
 
@@ -290,10 +293,9 @@ public class InterviewCommandService {
         return InterviewRoomCommandResponse.builder()
                 .interviewRoomId(newRoom.getInterviewRoomId())
                 .interviewRoomTitle(newRoom.getInterviewRoomTitle())
-                .interviewRoomStatus(newRoom.getInterviewRoomStatus().name())
                 .difficultyLevel(newRoom.getDifficultyLevel().name())
                 .evaluationStrictness(newRoom.getEvaluationStrictness().name())
-                .firstQuestion(originalQuestions.get(0).getInterviewMessage())
+                .questions(questionMessages)
                 .build();
     }
 
