@@ -45,8 +45,15 @@ public class ChattingRoomCommandService {
         if(optionalChattingRoomId.isPresent()){
             int chattingRoomId = optionalChattingRoomId.get();
             ChattingJoin chattingJoin = chattingJoinCommandService.findById(new ChattingJoinId(chattingRoomId,creatorId));
+            User user = userCommandRepository.findById((long)creatorId)
+                    .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
             if(chattingJoin.getChattingJoinStatus()=='N') {
                 chattingJoin.setChattingJoinStatus('Y');
+                String message = user.getNickname()+"님이 입장했습니다.";
+                ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
+                                .orElseThrow(() -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM));
+                chattingRoom.setUserCount(chattingRoom.getUserCount()+1);
+                chattingCommandService.sendSystemMessage(chattingRoomId,message);
             }
             return new ChattingRoomCommandResponse(chattingRoomId);
         }
