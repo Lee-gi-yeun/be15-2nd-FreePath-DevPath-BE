@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -150,13 +151,16 @@ public class InterviewCommandService {
         String nextQuestion = null;
         DifficultyLevel difficultyLevel = Optional.ofNullable(room.getDifficultyLevel())
                 .orElse(DifficultyLevel.MEDIUM);
+
         if (interviewIndex < 3) {
             if (room.getParentInterviewRoomId() != null) {
-                // 재실행 면접방인 경우, 기존 질문 복사본을 순서대로 사용한다
-                List<Interview> copiedQuestions = interviewRepository.findByInterviewRoomIdAndInterviewRoleOrderByInterviewIdAsc(roomId, InterviewRole.AI);
-                nextQuestion = copiedQuestions.get(interviewIndex).getInterviewMessage(); // index 1이면 두 번째 질문
+                //  재실행 : 복제된 질문만 꺼내오기 (다시 저장하면 중복이므로 save() 호출 X)
+                List<Interview> copiedQuestions = interviewRepository
+                        .findByInterviewRoomIdAndInterviewRoleOrderByInterviewIdAsc(roomId, InterviewRole.AI);
+                nextQuestion = copiedQuestions.get(interviewIndex).getInterviewMessage();
+
             } else {
-                // 재실행 면접방이 아니라 새로운 면접방인 경우
+                // 새 면접
                 List<String> previousQuestions = interviewRepository.findByInterviewRoomId(roomId).stream()
                         .filter(i -> i.getInterviewRole() == InterviewRole.AI)
                         .map(Interview::getInterviewMessage)
@@ -167,15 +171,16 @@ public class InterviewCommandService {
                         room.getInterviewCategory(), difficultyLevel,
                         previousQuestions
                 );
-            }
 
-            interviewRepository.save(
-                    Interview.builder()
-                            .interviewRoomId(roomId)
-                            .interviewRole(InterviewRole.AI)
-                            .interviewMessage(nextQuestion)
-                            .build()
-            );
+                // 새 면접 모드일 때만 저장
+                interviewRepository.save(
+                        Interview.builder()
+                                .interviewRoomId(roomId)
+                                .interviewRole(InterviewRole.AI)
+                                .interviewMessage(nextQuestion)
+                                .build()
+                );
+            }
         }
 
         // 5. 평균 점수 계산
@@ -255,7 +260,7 @@ public class InterviewCommandService {
                 .filter(i -> i.getInterviewMessage() != null && i.getInterviewMessage().startsWith("[면접 질문]"))
                 .toList();
 
-        if (originalQuestions.size() != 3) {
+        if (originalQuestions.size() < 3) {
             throw new InterviewQuestionCreationException(ErrorCode.INTERVIEW_QUESTION_CREATION_FAILED);
         }
 
@@ -275,14 +280,17 @@ public class InterviewCommandService {
                         .build()
         );
 
-        // 5. 복제된 질문 저장
-        for (Interview question : originalQuestions) {
-            interviewRepository.save(
-                    Interview.builder()
-                            .interviewRoomId(newRoom.getInterviewRoomId())
-                            .interviewRole(InterviewRole.AI)
-                            .interviewMessage(question.getInterviewMessage())
-                            .build()
+        // 3. 새 방 ID로 3개 질문 저장
+        List<Interview> toCopy = originalQuestions.subList(0, 3);
+        List<String> questionMessages = new ArrayList<>();
+        for (Interview q : toCopy) {
+            String msg = q.getInterviewMessage();
+            questionMessages.add(msg);
+            interviewRepository.save(Interview.builder()
+                    .interviewRoomId(newRoom.getInterviewRoomId())
+                    .interviewRole(InterviewRole.AI)
+                    .interviewMessage(msg)
+                    .build()
             );
         }
 
@@ -290,10 +298,9 @@ public class InterviewCommandService {
         return InterviewRoomCommandResponse.builder()
                 .interviewRoomId(newRoom.getInterviewRoomId())
                 .interviewRoomTitle(newRoom.getInterviewRoomTitle())
-                .interviewRoomStatus(newRoom.getInterviewRoomStatus().name())
                 .difficultyLevel(newRoom.getDifficultyLevel().name())
                 .evaluationStrictness(newRoom.getEvaluationStrictness().name())
-                .firstQuestion(originalQuestions.get(0).getInterviewMessage())
+                .questions(questionMessages)
                 .build();
     }
 

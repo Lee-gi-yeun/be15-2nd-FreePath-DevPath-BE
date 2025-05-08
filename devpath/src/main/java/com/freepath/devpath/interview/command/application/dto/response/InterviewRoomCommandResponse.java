@@ -2,6 +2,8 @@ package com.freepath.devpath.interview.command.application.dto.response;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Builder
 public class InterviewRoomCommandResponse {
@@ -12,4 +14,5 @@ public class InterviewRoomCommandResponse {
     private String evaluationStrictness;
     private String interviewRoomMemo;
     private String firstQuestion;
+    private List<String> questions;
 }
