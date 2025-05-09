@@ -1,5 +1,6 @@
 package com.freepath.devpath.board.comment.command.application.controller;
 
+import com.freepath.devpath.board.comment.command.application.dto.CommentResponseDto;
 import com.freepath.devpath.board.comment.command.domain.domain.Comment;
 import com.freepath.devpath.board.comment.command.application.dto.CommentRequestDto;
 import com.freepath.devpath.board.comment.command.application.service.CommentCommandService;
@@ -22,13 +23,13 @@ public class CommentController {
 
     @PostMapping
     @Operation(summary = "댓글, 대댓글 작성", description = "댓글 또는 대댓글을 작성 합니다.")
-    public ResponseEntity<ApiResponse<Comment>> createComment(
+    public ResponseEntity<ApiResponse<CommentResponseDto>> createComment(
             @RequestBody CommentRequestDto dto,
             @AuthenticationPrincipal User userDetails) {
 
         int userId = Integer.parseInt(userDetails.getUsername());
 
-       Comment comment = commentCommandService.saveComment(dto, userId);
+       CommentResponseDto comment = commentCommandService.saveComment(dto, userId);
 
         return ResponseEntity.ok(ApiResponse.success(comment));
     }

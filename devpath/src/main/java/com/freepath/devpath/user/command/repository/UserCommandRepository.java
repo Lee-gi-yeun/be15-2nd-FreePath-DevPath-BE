@@ -49,4 +49,7 @@ public interface UserCommandRepository extends JpaRepository<User, Long> {
     boolean existsByLoginIdAndUserDeletedAtIsNull(String loginId);
 
     Optional<User> findByLoginIdAndUserDeletedAtIsNull(String loginId);
+
+    @Query("SELECT u.nickname FROM User u WHERE u.userId = :userId AND u.userDeletedAt IS NULL")
+    Optional<String> findNicknameByUserId(Integer userId);
 }

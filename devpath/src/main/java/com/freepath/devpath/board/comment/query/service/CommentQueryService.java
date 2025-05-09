@@ -71,15 +71,7 @@ public class CommentQueryService {
 
         List<MyCommentResponseDto> originalComments = commentMapper.selectMyComments(searchRequest);
 
-        if (originalComments.isEmpty()) {
-            throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
-        }
-
         long totalItems = commentMapper.countMyComments(searchRequest);
-
-        if (totalItems == 0) {
-            throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
-        }
 
         List<MyCommentResponseDto> comments = new ArrayList<>();
         for (MyCommentResponseDto comment : originalComments) {
@@ -112,15 +104,7 @@ public class CommentQueryService {
 
         List<MyCommentResponseDto> comments = commentMapper.selectReportedComments(searchRequest);
 
-        if (comments.isEmpty()) {
-            throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
-        }
-
         long totalItems = commentMapper.countReportedComments(searchRequest);
-
-        if (totalItems == 0) {
-            throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
-        }
 
         int page = searchRequest.getPage();
         int size = searchRequest.getSize();
