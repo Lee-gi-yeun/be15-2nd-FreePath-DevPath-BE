@@ -45,7 +45,7 @@ public class SecurityConfig {
                                 .accessDeniedHandler(restAccessDeniedHandler)) // 인가 실패
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers(HttpMethod.OPTIONS, "/user/findLoginId").permitAll()
+                                .requestMatchers(HttpMethod.OPTIONS, "/user/findLoginId", "/user/resetPw").permitAll()
                                 .requestMatchers(HttpMethod.POST,
                                         "/user/signup", "/user/login", "/user/refresh","/user/signup/temp","/user/email/check",
                                         "/user/find-id", "/user/verify-email", "/user/reset-password").permitAll()
