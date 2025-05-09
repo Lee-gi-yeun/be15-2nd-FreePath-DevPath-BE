@@ -86,6 +86,10 @@ public class CommentCommandService {
             throw new CommentAccessDeniedException(ErrorCode.COMMENT_ACCESS_DENIED);
         }
 
+        if (Character.valueOf('Y').equals(comment.getDeleted())) {
+            throw new CommentAccessDeniedException(ErrorCode.COMMENT_ACCESS_DENIED);
+        }
+
         comment.updateContent(newContent);
         commentRepository.save(comment);
     }
@@ -97,6 +101,10 @@ public class CommentCommandService {
 
         if (comment.getUserId() != userId) {
             throw new CommentDeleteDeniedException(ErrorCode.COMMENT_DELETE_DENIED);
+        }
+
+        if (Character.valueOf('Y').equals(comment.getDeleted())) {
+            throw new CommentAccessDeniedException(ErrorCode.COMMENT_ACCESS_DENIED);
         }
 
         comment.softDelete();
