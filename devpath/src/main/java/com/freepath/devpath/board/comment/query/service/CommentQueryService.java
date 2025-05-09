@@ -45,6 +45,7 @@ public class CommentQueryService {
                     .contents(contents)
                     .createdAt(flat.getCreatedAt())
                     .modifiedAt(flat.getModifiedAt())
+                    .isCommentDeleted(flat.getIsCommentDeleted())
                     .replies(new ArrayList<>())
                     .build();
 

@@ -44,7 +44,9 @@ public class SecurityConfig {
                         exception.authenticationEntryPoint(restAuthenticationEntryPoint) // 인증 실패
                                 .accessDeniedHandler(restAccessDeniedHandler)) // 인가 실패
                 .authorizeHttpRequests(
-                        auth -> auth.requestMatchers(HttpMethod.POST,
+                        auth -> auth
+                                .requestMatchers(HttpMethod.OPTIONS, "/user/findLoginId", "/user/resetPw").permitAll()
+                                .requestMatchers(HttpMethod.POST,
                                         "/user/signup", "/user/login", "/user/refresh","/user/signup/temp","/user/email/check",
                                         "/user/find-id", "/user/verify-email", "/user/reset-password").permitAll()
 

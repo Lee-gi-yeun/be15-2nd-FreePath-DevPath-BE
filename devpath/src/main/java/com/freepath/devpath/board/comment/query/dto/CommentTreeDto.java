@@ -17,5 +17,6 @@ public class CommentTreeDto {
     private String contents;
     private Date createdAt;
     private Date modifiedAt;
+    private String isCommentDeleted;
     private List<CommentTreeDto> replies; // 재귀적으로 트리 구조를 구성
 }
